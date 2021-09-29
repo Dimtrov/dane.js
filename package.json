@@ -1,0 +1,33 @@
+{
+  "name": "dane.js",
+  "version": "0.0.1",
+  "description": "A modern web MVC framework for Node.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dimtrov/dane.js.git"
+  },
+  "keywords": [
+    "dane.js",
+    "web",
+    "mvc",
+    "framework",
+    "nodejs",
+    "dimtrov"
+  ],
+  "author": "Dimitri Sitchet Tomkeu <devcode.dst@gmail.com>",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/Dimtrov/dane.js/issues"
+  },
+  "homepage": "https://github.com/Dimtrov/dane.js#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "php-in-js": "^1.0.1"
+  }
+}
