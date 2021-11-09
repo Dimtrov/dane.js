@@ -1,7 +1,7 @@
 const Route = require('./Route')
 
 module.exports = class Router {
-    routes = {
+    routes : {[key: string]: Array<any>}= {
         get: [],
         post: [],
         put: [],
@@ -9,22 +9,22 @@ module.exports = class Router {
         delete: []
     };
 
-    namedRoutes = {};
+    namedRoutes : {[key: string]: typeof Route}= {};
 
     /**
      * @var {String}
      */
-    #defaultController = 'Home';
+    #defaultController : string = 'Home';
     
     /**
      * @var {String}
      */
-    #defaultMethod = 'index';
+    #defaultMethod : string = 'index';
 
     /**
      * @var {Boolean}
      */
-    #autoRoute = true;
+    #autoRoute : boolean = true;
 
     /**
      * Ajoute une route get
@@ -34,8 +34,7 @@ module.exports = class Router {
      * @param {String} name 
      * @returns {Route}
      */
-    get(path, action, name) 
-    {
+    get(path : string, action : string | Function, name : string) : typeof Route {
         return this.add('get', path, action, name);
     }
 
@@ -47,8 +46,7 @@ module.exports = class Router {
      * @param {String} name
      * @returns {Route}
      */
-    post(path, action, name) 
-    {
+    post(path : string, action : string | Function, name : string) : typeof Route {
         return this.add('post', path, action, name);
     }
 
@@ -60,8 +58,7 @@ module.exports = class Router {
      * @param {String} name 
      * @returns {Route}
      */
-    put(path, action, name)
-    {
+    put(path : string, action : string | Function, name : string) : typeof Route {
         return this.add('put', path, action, name);
     }
 
@@ -74,7 +71,7 @@ module.exports = class Router {
      * @param {String} name 
      * @returns {Route}
      */
-    add(verb, path, action, name) {
+    add(verb : string, path : string, action : string | Function, name : string) : typeof Route {
         const route = new Route(path, action);
         this.routes[verb.toLowerCase()].push(route);
         if (name && typeof name != undefined) {
@@ -89,7 +86,7 @@ module.exports = class Router {
      * 
      * @returns {Boolean}
      */
-    getAutoRoute() {
+    getAutoRoute() : boolean {
         return this.#autoRoute
     }
 
@@ -98,7 +95,7 @@ module.exports = class Router {
      * 
      * @param {Boolean} value 
      */
-    setAutoRoute(value) {
+    setAutoRoute(value : boolean) {
         this.#autoRoute = value === true
     }
 
@@ -107,7 +104,7 @@ module.exports = class Router {
      * 
      * @returns {String}
      */
-    getDefaultMethod() {
+    getDefaultMethod() : string {
         return this.#defaultMethod;        
     }
 
@@ -117,8 +114,7 @@ module.exports = class Router {
      * @param {String} verb 
      * @returns {Route[]|null}
      */
-    getRoutes(verb) 
-    {
+    getRoutes(verb : string) : Array<any> | null {
         return this.routes[verb.toLowerCase()] || null;        
     }
 
@@ -127,11 +123,10 @@ module.exports = class Router {
      * Genere l'url d'une route nommée
      * 
      * @param {String} name 
-     * @param {Array} params 
+     * @param {object} params  
      * @returns {String}
      */
-    url(name, params) 
-    {
+    url(name : string, params : {[key: string] : any}) {
         if (typeof params == 'undefined') {
             params = []
         }

@@ -1,32 +1,33 @@
+import { Router } from "Router";
+
 const fs = require('fs');
 const { trim } = require('php-in-js/modules/string')
 const { call_user_func_array } = require('php-in-js/modules/functions');
-const { is_string } = require('php-in-js/modules/types');
 
 module.exports = class Route
 {
     /**
      * @var {String}
      */
-    path;
+    path : string;
 
     /**
      * @var {String|Function}
      */
-    callable;
+    callable : string | Function;
     
     /**
      * @var {Array}
      */
-    #matches = [];
+    #matches : Array<string> = [];
 
     /**
      * @var {Object}
      */
-    #params = {}
+    #params : {[key: string]: any} = {};
 
-    constructor(path, callable) 
-    {
+
+    constructor(path : string, callable : string | Function) {
         this.path = trim(path, '/')
         this.callable = callable
     }
@@ -37,8 +38,8 @@ module.exports = class Route
      * @param {String} regex 
      * @returns {Route}
      */
-    with(param, regex) {
-        this.#params = Object.assign({}, this.#params, { [param]: regex.replace('(', '(?:') });
+    with(param : string, regex : string) : Route {
+        this.#params = {...this.#params, ...{ [param]: regex.replace('(', '(?:') }};
 
         return this;
     }
@@ -49,8 +50,7 @@ module.exports = class Route
      * @param {String} url 
      * @returns {Boolean}
      */
-    match(url)
-    {
+    match(url : string) : boolean {
         url = trim(url, '/')
 
         //let path = this.path.replace(, '([^/]+)');
@@ -60,7 +60,7 @@ module.exports = class Route
                 return '(' + this.#params[match[1]] + ')';
             }
             return '([^/]+)';
-        }, this.path)
+        })
         
         const regex = new RegExp(`^${path}$`, 'i');
         const matches = url.match(regex);
@@ -83,18 +83,17 @@ module.exports = class Route
      * @param {*} res 
      * @returns 
      */
-    call(router, path, req, res)
-    {
+    call(router : Router, path : {[key: string]: string}, req: any, res: any) : any {
         let params = this.#matches;
         params.push(...[req, res]);
 
-        if (!is_string(this.callable)) {
+        if (this.callable instanceof Function) {
             return call_user_func_array(this.callable, params);
         }
 
         const parts = this.callable.split('@');
         let controller = parts.shift();
-        if (!controller.endsWith('Controller')) {
+        if (!controller?.endsWith('Controller')) {
             controller += 'Controller'
         }
 
@@ -118,11 +117,10 @@ module.exports = class Route
     /**
      * Genere l'url d'une route avec les parametres 
      * 
-     * @param {Array} params 
+     * @param {Object} params 
      * @returns {String}
      */
-    getUrl(params)
-    {
+    getUrl(params : {[key: string] : any}) : String {
         let path = this.path
 
         for (let k in params) {
